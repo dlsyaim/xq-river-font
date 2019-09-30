@@ -1,39 +1,33 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-import BasicLayout from './layout/BasicLayout'
-import SignIn from './views/SignIn'
-
+import Ahome from '@/views/Index'
+import News from '@/views/news'
+import Waterlist from '@/views/waterlist'
+import Editnews from '@/views/editnews'
 Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
+  mode:'history',
   routes: [
     {
       path: '/',
-      component: BasicLayout,
-      children: [
-        {path:'sign-in',component:SignIn},
-        {path:'',redirect:'/home'},
-        {
-          path: 'home',
-          component: () => import(/* webpackChunkName: "home" */'./views/home/Home')
-        },
-        {
-          path: 'river-patrol',
-          component: () => import(/* webpackChunkName: "river-patrol" */'./views/river-patrol/RiverPatrol')
-        },
-        {
-          path: 'event/wait-deal',
-          component: () => import(/* webpackChunkName: "event" */'./views/event/WaitDeal')
-        },
-        {
-          path: 'event/not-handled-on-time',
-          component: () => import(/* webpackChunkName: "event" */'./views/event/NotHandledOnTime')
-        },
-        {path: '*', component: () => import('./views/exception/PageNotFound')}
-      ]
-    }
+      name: 'A',
+      component: Ahome
+    },
+    {
+      path: '/news',
+      name: 'News',
+      component: News
+    },
+    {
+      path: '/waterlist',
+      name: 'Waterlist',
+      component: Waterlist
+    },
+    {
+      path: '/editnews',
+      name: 'Editnews',
+      component: Editnews
+    },
   ]
 })

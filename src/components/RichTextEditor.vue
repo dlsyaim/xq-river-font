@@ -49,7 +49,7 @@
       editor.customConfig.customAlert =(info) =>{
         console.log(info);
         if (info.code!==1){
-          this.$message.error(info);
+          this.$message.error(info,2);
         }
       };
       // 自定义上传
@@ -60,7 +60,7 @@
         uploadFile(data).then(res=>{
           this.isUploadingPicture=false;
           if(res){
-            this.$message.success('图片上传成功');
+            this.$message.success('图片上传成功',2);
             insert(FILE_URL_PREFIX+res.data[0]);
           }
         });

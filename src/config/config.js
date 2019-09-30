@@ -1,17 +1,18 @@
 /**
  * api根路径
- * @type {string}
+ * @type {string}http://10.0.0.96:7244
  */
-export const BASE_URL='http://39.106.76.142';
-
+// export const BASE_URL='http://61.240.12.212:9081';
+export const BASE_URL='http://61.240.12.212:9088';
+export const BASE_URLimg='http://61.240.12.212:9095/';
+export const BASE_URLa='http://61.240.12.212:9088';
+export const BASE_URLc='http://61.240.12.212:9081';
 /**
  * 上传文件接口
  * @type {string}
  */
 export const UPLOAD_URL='http://60.28.163.75/inform/v1/informReport/upload';
-
 export const FILE_URL_PREFIX='http://47.93.191.69:8080';
-
 /**
  * 表格常用默认分页配置
  */
@@ -62,3 +63,15 @@ export const menuList = [
   {id: 'c', funcUrl: 'river-patrol', icon: 'file', name: '工作台账', children: []},
   {id: 'd', funcUrl: 'river-patrol', icon: 'file', name: '展示发布', children: []}
 ];
+
+export const GetQueryString = (name) => {
+  var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+  var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+  if(r!=null)return  unescape(r[2]); return null;
+};
+export  function getUrlKey(name){
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
+}
+export  function editUrlKey(name){
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
+}
