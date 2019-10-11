@@ -13,21 +13,13 @@ export const get = (url, params) => {
       params: params
     }).then(res => {
       if (res.status === 200) {
-        if(res.data.code===200){
-          resolve(res.data);
-        }
-        else if(res.status === 403) {
-          localStorage.clear();
-          window.location.href="http://61.240.12.212:9081?info=v5";
-        }
-        else {
-          handleBusinessError(res.data);
-          resolve(res.data);
-        }
-      }
-      else if(res.status === 403) {
+        resolve(res.data);
+      } else if(res.status === 403) {
         localStorage.clear();
-        window.location.href="http://61.240.12.212:9081?info=v5";
+        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+      } else {
+        handleHttpError(err);
+        resolve(err.data)
       }
     }).catch(err => {
       handleHttpError(err);
@@ -49,17 +41,13 @@ export const post = (url,params, data) => {
     }).then(res => {
       console.log(res);
       if (res.status === 200) {
-        if(res.data.code===200){
-          resolve(res.data);
-        }
-        else {
-          handleBusinessError(res.data);
-          resolve(res.data);
-        }
-      }
-      else if(res.status === 403) {
+        resolve(res.data);
+      } else if(res.status === 403) {
         localStorage.clear();
-        window.location.href="http://61.240.12.212:9081?info=v5";
+        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+      } else {
+        handleHttpError(err);
+        resolve(err.data)
       }
     }).catch(err => {
       handleHttpError(err);
@@ -80,12 +68,13 @@ export const put = (url, data) => {
       data: data
     }).then(res => {
       if (res.status === 200) {
-        if(res.data.code===200){
-          resolve(res.data);
-        } else {
-          handleBusinessError(res.data);
-          resolve(res.data);
-        }
+        resolve(res.data);
+      } else if(res.status === 403) {
+        localStorage.clear();
+        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+      } else {
+        handleHttpError(err);
+        resolve(err.data)
       }
     }).catch(err => {
       handleHttpError(err);
@@ -105,14 +94,13 @@ export const deleteRequest = (url) => {
       }
     }).then(res => {
       if (res.status === 200) {
-        if(res.data.resCode===1){
-          resolve(res.data);
-        }
-
-        else {
-          handleBusinessError(res.data);
-          resolve(res.data);
-        }
+        resolve(res.data);
+      } else if(res.status === 403) {
+        localStorage.clear();
+        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+      } else {
+        handleHttpError(err);
+        resolve(err.data)
       }
     }).catch(err => {
       handleHttpError(err);

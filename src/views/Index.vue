@@ -12,25 +12,33 @@
           </div>
           <br>
           <div>
-            <p>水体说明：{{riverText}}</p>
-            <p>经纬度：{{riverX}}, {{riverY}}</p>
-            <p>实拍图片：</p>
-            <p style="margin-left: 10%;width: 80%">
-            <!--<li v-for="name in sider">-->
-              <!--<a :data-menuid="name.path" style="width: 100%;height: 100%;display: block">{{ name.name }}</a>-->
-            <!--</li>-->
-              <img v-for="name in riverImage" style="width: 50%;padding: 10px 10px 10px 10px" :src="name" alt="">
-            </p>
-            <p>实拍视频：</p>
-            <p>
-              <video style="width: 70%;margin-left: 15%" :src="riverVideo"
+            <a-row>
+              <a-col :span="12">水体名称： {{riverName}}</a-col>
+              <a-col :span="12">水体说明：{{riverText}}</a-col>
+              <a-col :span="12">状态： {{riverStatus}}</a-col>
+              <a-col :span="12">河长：{{riverLong}}</a-col>
+              <a-col :span="12">经纬度：{{riverX}}, {{riverY}}</a-col>
+              <a-col :span="24">
+                实拍图片：
+                <a-row v-if="riverImage.length == 0">
+                  <a-col :span="24">暂无图片</a-col>
+                </a-row>
+                <a-row>
+                  <a-col :span="12" v-for="image_url in riverImage" :key='image_url' style="margin: 10px 0px;">
+                    <img :src="image_url" alt="">
+                  </a-col>
+                </a-row>
+              </a-col>
+              <a-col :span="24">
+                实拍视频：
+              </a-col>
+              <a-col :span="24">
+                <video style="width: 100%;" :src="riverVideo"
                      controls="controls">
-                your browser does not support the video tag
-              </video>
-            </p>
-            <p>状态： {{riverStatus}}</p>
-            <!--<p>一河一策：{{riverOneToOne}}</p>-->
-            <p>河长：{{riverLong}}</p>
+                  your browser does not support the video tag
+                </video>
+              </a-col>
+            </a-row>
           </div>
         </div>
         <div id="resultDiv"></div>
@@ -62,6 +70,7 @@
         riverLong:'',
         riverStatus:'',
         riverText:'',
+        riverName: '',
         riverVideo:'',
         riverImage:[],
         riverX:'',
@@ -105,28 +114,29 @@
           if (res.code === 200) {
             if(res.results.river.riverStatus==1){
               this.riverStatus='已审核';
-            }
-            else {
+            } else {
               this.riverStatus='未审核';
             }
             this.riverLong=res.results.river.riverLong;
             this.riverText=res.results.river.riverText;
             this.riverVideo=BASE_URLimg+res.results.river.riverVideo;
-            if(res.results.river.imageList.length>0 && res.results.river.imageList.length<=4){
-              for(let i=0;i<res.results.river.imageList.length;i++){
-                // console.log(res.results.river.imageList[i]);
-                this.riverImage[i]=BASE_URLimg+res.results.river.imageList[i];
-              }
+            this.riverName = res.results.river.riverName;
 
-            }
-            else if(res.results.river.imageList.length>4){
-              for(let i=res.results.river.imageList.length;i>res.results.river.imageList.length-4;i--){
-                for(let j=0;j<4;j++){
-                  this.riverImage[j]=res.results.river.imageList[i];
+            if (res.results.river.imageList != null) {
+              if (res.results.river.imageList.length>0 && res.results.river.imageList.length<=4){
+                for(let i=0;i<res.results.river.imageList.length;i++){
+                  // console.log(res.results.river.imageList[i]);
+                  this.riverImage[i]=BASE_URLimg+res.results.river.imageList[i];
+                }
+
+              } else if(res.results.river.imageList.length>4){
+                for(let i=res.results.river.imageList.length;i>res.results.river.imageList.length-4;i--){
+                  for(let j=0;j<4;j++){
+                    this.riverImage[j]=res.results.river.imageList[i];
+                  }
                 }
               }
-            }
-            else {
+            } else {
               this.riverImage=[];
             }
             console.log(this.riverImage);
@@ -143,30 +153,32 @@
         console.log(params);
         post(BASE_URL+'/v5/river/getRiverByXY', null, params).then(res => {
           if (res.code === 200) {
+            console.log("=====================");
+            console.log(res.results);
             if(res.results.river.riverStatus==1){
               this.riverStatus='已审核';
-            }
-            else {
+            } else {
               this.riverStatus='未审核';
             }
             this.riverLong=res.results.river.riverLong;
             this.riverText=res.results.river.riverText;
             this.riverVideo=BASE_URLimg+res.results.river.riverVideo;
-            if(res.results.river.imageList.length>0 && res.results.river.imageList.length<=4){
-              for(let i=0;i<res.results.river.imageList.length;i++){
-                // console.log(res.results.river.imageList[i]);
-                this.riverImage[i]=BASE_URLimg+res.results.river.imageList[i];
-              }
+            this.riverName = res.results.river.riverName;
+            if (res.results.river.imageList != null) {
+              if (res.results.river.imageList.length>0 && res.results.river.imageList.length<=4){
+                for(let i=0;i<res.results.river.imageList.length;i++){
+                  // console.log(res.results.river.imageList[i]);
+                  this.riverImage[i]=BASE_URLimg+res.results.river.imageList[i];
+                }
 
-            }
-            else if(res.results.river.imageList.length>4){
-              for(let i=res.results.river.imageList.length;i>res.results.river.imageList.length-4;i--){
-                for(let j=0;j<4;j++){
-                  this.riverImage[j]=res.results.river.imageList[i];
+              } else if(res.results.river.imageList.length>4){
+                for(let i=res.results.river.imageList.length;i>res.results.river.imageList.length-4;i--){
+                  for(let j=0;j<4;j++){
+                    this.riverImage[j]=res.results.river.imageList[i];
+                  }
                 }
               }
-            }
-            else {
+            } else {
               this.riverImage=[];
             }
             this.riverX=res.results.river.riverX;
@@ -343,7 +355,7 @@
             } else if (res.code === 411) {
               console.log('token 失效');
               localStorage.clear();
-              window.location.href = "http://61.240.12.212:9081?info=v5";
+              window.location.href = "http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
             }
           });
         }
@@ -363,7 +375,7 @@
               }
             });
           } else {
-            window.location.href = "http://61.240.12.212:9081?info=v5";
+            window.location.href = "http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
           }
         }
       },
@@ -386,40 +398,6 @@
         console.log('Clicked cancel button');
         this.visible = false
       },
-      slider_active(e) {
-        console.log(e);
-        switch (e) {
-          case 'f57a0d43b59611e99ca320898447c563':
-            this.title_left = "新闻动态列表";
-            break;
-          case '2f455c04b59411e99ca320898447c543':
-            this.title_left = "政策法规动态列表";
-            break;
-          case 'f57a0d43b59611e99ca320898447c543':
-            this.title_left = "信息公开动态列表";
-            break;
-          case '21585d54ba8a11e9aba20242ac110002':
-            this.title_left = "党政工作动态列表";
-            break;
-          case '682a0a21ba8a11e9aba20242ac110002':
-            this.title_left = "水务动态列表";
-            break;
-          case '6e5cfec8ba8a11e9aba20242ac110002':
-            this.title_left = "河长动态列表";
-            break;
-          case '732a97edba8a11e9aba20242ac110002':
-            this.title_left = "两会建议动态列表";
-            break;
-          case '797ac176ba8a11e9aba20242ac110002':
-            this.title_left = "防汛建议动态列表";
-            break;
-          case '8b0f6bc6ba8a11e9aba20242ac110002':
-            this.title_left = "两会提案动态列表";
-            break;
-          case '982ebcf9ba8a11e9aba20242ac110002':
-            this.title_left = "政民零距离动态列表";
-        }
-      }
     },
   };
 </script>
