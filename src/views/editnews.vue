@@ -266,6 +266,36 @@
         //向地图上添加线
         this.map.addOverLay(line);
       },
+      draw_xq_map(result) {
+        if(result.getStatus() == 100) {
+          var data = result.getData();
+          for(var i = 0; i < data.length; i++){
+            if(data[i].points){
+              // 绘制行政区划
+              // polygon(data[i].points);
+              var pointsArr = [];
+              for (var j = 0; j < data[i].points.length; j++) {
+                var regionLngLats = [];
+                var regionArr = data[i].points[j].region.split(",");
+                for (var m = 0; m < regionArr.length; m++) {
+                  var lnglatArr = regionArr[m].split(" ");
+                  var lnglat = new T.LngLat(lnglatArr[0], lnglatArr[1]);
+                  regionLngLats.push(lnglat);
+                  pointsArr.push(lnglat);
+                }
+                //创建面对象
+                var polygon = new T.Polygon(regionLngLats,{color: "green", opacity: 1, fillColor: "none", fillOpacity: 0.3});
+                //向地图上添加行政区划面
+                this.map.addOverLay(polygon);
+              }
+              //显示最佳比例尺
+              this.map.setViewport(pointsArr);
+            }
+          }
+        } else {
+          result.getMsg();
+        }
+      },
       onLoad(x, y) {
         // this.center = new T.LngLat(this.map_x[0], this.map_y[0]);
         this.center = new T.LngLat(x, y);
@@ -291,6 +321,18 @@
         };
         //创建标注工具对象
         this.polygonTool = new T.PolygonTool(this.map, config);
+        // 设置西青区行政区划图
+        // 创建对象
+        var administrative = new T.AdministrativeDivision();
+        var config_map = {
+          needSubInfo: false,
+          needAll: false,
+          needPolygon: true,
+          needPre: true,
+          searchType: 1,
+          searchWord: "西青区"
+        };
+        administrative.search(config_map, this.draw_xq_map);
       },
       localsearchResult(result) {
         //清空地图及搜索列表
