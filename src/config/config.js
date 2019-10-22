@@ -51,17 +51,17 @@ export const menuList = [
       },
     ]
   },
-  {id: 3, funcUrl: 'river-patrol', icon: 'file', name: '考核评估', children: []},
-  {id: 4, funcUrl: 'river-patrol', icon: 'file', name: '分析统计', children: []},
-  {id: 5, funcUrl: 'river-patrol', icon: 'file', name: '信息填报', children: []},
-  {id: 6, funcUrl: 'river-patrol', icon: 'file', name: '信息管理', children: []},
-  {id: 7, funcUrl: 'river-patrol', icon: 'file', name: '河湖档案', children: []},
-  {id: 8, funcUrl: 'river-patrol', icon: 'file', name: '抽查督导', children: []},
-  {id: 9, funcUrl: 'river-patrol', icon: 'file', name: '系统管理', children: []},
-  {id: 'a', funcUrl: 'river-patrol', icon: 'file', name: '移动平台', children: []},
-  {id: 'b', funcUrl: 'river-patrol', icon: 'file', name: '信息服务', children: []},
-  {id: 'c', funcUrl: 'river-patrol', icon: 'file', name: '工作台账', children: []},
-  {id: 'd', funcUrl: 'river-patrol', icon: 'file', name: '展示发布', children: []}
+  // {id: 3, funcUrl: 'river-patrol', icon: 'file', name: '考核评估', children: []},
+  // {id: 4, funcUrl: 'river-patrol', icon: 'file', name: '分析统计', children: []},
+  // {id: 5, funcUrl: 'river-patrol', icon: 'file', name: '信息填报', children: []},
+  // {id: 6, funcUrl: 'river-patrol', icon: 'file', name: '信息管理', children: []},
+  // {id: 7, funcUrl: 'river-patrol', icon: 'file', name: '河湖档案', children: []},
+  // {id: 8, funcUrl: 'river-patrol', icon: 'file', name: '抽查督导', children: []},
+  // {id: 9, funcUrl: 'river-patrol', icon: 'file', name: '系统管理', children: []},
+  // {id: 'a', funcUrl: 'river-patrol', icon: 'file', name: '移动平台', children: []},
+  // {id: 'b', funcUrl: 'river-patrol', icon: 'file', name: '信息服务', children: []},
+  // {id: 'c', funcUrl: 'river-patrol', icon: 'file', name: '工作台账', children: []},
+  // {id: 'd', funcUrl: 'river-patrol', icon: 'file', name: '展示发布', children: []}
 ];
 
 export const GetQueryString = (name) => {

@@ -20,7 +20,10 @@
           {"name": "首页", "path": '/', "index": 0},
           {"name": "消息管理", "path": '/news', "index": 1},
           {"name": "水系列表", "path": '/waterlist', "index": 2},
-          {"name": "水系地图测算", "path": '/editnews', "index": 3}
+          {"name": "水系地图测算", "path": '/editnews', "index": 3},
+          {"name": "编辑微小水体", "path": '/microWaterBody/microWaterEdit', "index": 4},
+          {"name": "新建微小水体", "path": '/microWaterBody/microWaterNew', "index": 5},
+          {"name": "新建微小水体列表", "path": '/microWaterBody/microWaterNewList', "index": 6}
         ],
       }
     },
