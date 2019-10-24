@@ -1,16 +1,16 @@
 <template>
   <div>
-    <a-row style="text-align: center">
-      <a-col class="headStyle" :md="{ span: 24, offset: 0 }" :lg="{ span: 12, offset: 6 }">
-        <span @click="goBack" style="display: inline-block;position: absolute;left: 0;font-size: 18px"><a-icon type="left" /> 返回</span>
-        <span>新建微小水体</span>
-      </a-col>
-    </a-row>
+<!--    <a-row style="text-align: center">-->
+<!--      <a-col class="headStyle" :md="{ span: 24, offset: 0 }" :lg="{ span: 12, offset: 6 }">-->
+<!--        <span @click="goBack" style="display: inline-block;position: absolute;left: 0;font-size: 18px"><a-icon type="left" /> 返回</span>-->
+<!--        <span>新建微小水体</span>-->
+<!--      </a-col>-->
+<!--    </a-row>-->
     <a-row>
       <a-col class="bodyStyle" :md="{ span: 24, offset: 0 }" :lg="{ span: 12, offset: 6 }">
         <div style="padding-bottom: 10px">
           <span style="display: inline-block;width: 25%">水系名称：</span>
-          <a-input required style="width: 75%" v-model="riverName" placeholder="标题不超过20字" />
+          <a-input style="width: 75%" v-model="riverName" placeholder="标题不超过20字"/>
         </div>
         <div style="padding-bottom: 10px;vertical-align: top">
           <span style="display: inline-block;width: 25%;position: relative;bottom: 38px">水系描述：</span>
@@ -20,9 +20,9 @@
           <span style="display: inline-block;width: 25%;position: relative;bottom: 55px">水系照片：</span>
           <a-upload
             name="file"
-            :headers="token"
             style="display: inline-block"
             @change="uploadImage"
+            @preview="handlePreview"
             accept=".png,.jpg,.jpeg"
             action="http://61.240.12.212:9088/v5/upload/upload"
             listType="picture-card"
@@ -34,7 +34,7 @@
             </div>
           </a-upload>
           <a-modal :visible="previewVisible" :footer="null" @cancel="previewVisible = false">
-            <img alt="example" style="width: 100%" :src="previewImage" />
+            <img alt="previewName" style="width: 100%" :src="previewImage" />
           </a-modal>
         </div>
         <div style="padding-bottom: 10px">
@@ -42,15 +42,14 @@
           <a-upload
             action="http://61.240.12.212:9088/v5/upload/upload"
             @change="uploadVideo"
-            :headers="token"
             name="file"
             :fileList="videoFileList"
           >
             <a-button style="background-color:skyblue;color: whitesmoke" icon="upload">视频上传</a-button>
           </a-upload>
         </div>
-        <div style="margin:40px auto;text-align: center">
-          <a-button @click="saveMessage" style="width: 30%;background-color: skyblue;color: white">保存</a-button>
+        <div style="margin:40px 0;text-align: center;width: 100%;">
+          <a-button @click="saveMessage" style="width: 100%;background-color: skyblue;color: white">保存</a-button>
         </div>
       </a-col>
     </a-row>
@@ -59,58 +58,121 @@
 
 <script>
     import {post} from "../../util/axios";
+    import {BASE_URL,BASE_URLimg} from "../../config/config";
+    import axios from "axios";
 
     export default {
         name: "microWaterNew",
         data() {
             return {
                 riverName: '',
+                BASE_URLimg,
                 riverText: '',
                 imageFileList: [],
                 previewVisible: false,
                 previewImage: '',
+                previewName: '',
                 videoFileList: [],
-                image: '',
-                video: '',
+                riverX: '',
+                riverY: '',
                 userId: '0032f877687c45a0812f25af27e8092d',
                 token:{
                     'token': localStorage.getItem('v5Token')
                 },
             }
         },
+        mounted() {
+            this.city();
+        },
         methods: {
-            saveMessage() {
-                this.loading = true;
-                const params = {
-                    userId: this.userId,//userId为登录人id,需要获取
-                    riverName: this.riverName,
-                    riverText: this.riverText,
-                    riverStatus: '0',
-                    riverImage: this.image,
-                    riverVideo: this.video,
-                };
-                post(`http://61.240.12.212:9088/v5/river/insertRiver`,params).then(res=>{
-                    if (res.code == 200) {
-                        this.loading = false;
-                        this.$message.success('新增成功');
-                        this.$router.push({path: '/microWaterBody/microWaterNewList',query:{id:this.userId}})
-                    }else{
-                        this.$message.error('新增失败，请重试')
+            //获取用户位置
+            city(){
+                const that =this;
+                const map = new BMap.Map("allmap");
+                const geolocation = new BMap.Geolocation();
+                geolocation.getCurrentPosition(function(r){
+                    if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                        that.riverX = (r.longitude).toString();
+                        that.riverY = (r.latitude).toString();
+                    } else {
+                        alert('暂时无法获取你的位置')
                     }
                 })
+            },
+            saveMessage() {
+                if (this.riverName != '') {
+                    this.loading = true;
+                    const imageUrlArray= this.imageFileList.filter(item=>item.responseUrl).map(item=>item.responseUrl);
+                    const image =imageUrlArray.join(',');
+                    const videoUrlArray= this.videoFileList.filter(item=>item.responseUrl).map(item=>item.responseUrl);
+                    const video =videoUrlArray.join(',');
+                    const params = {
+                        userId: this.userId,//userId为登录人id,需要获取
+                        riverName: this.riverName,
+                        riverText: this.riverText,
+                        riverStatus: '0',
+                        riverImage: image,
+                        riverVideo: video,
+                        riverX: this.riverX,//经度
+                        riverY: this.riverY,//纬度
+                    };
+                    console.log(this.riverX);
+                    axios({
+                        method: 'post',
+                        url: 'http://61.240.12.212:9088/v5/river/insertRiver',
+                        // headers: {
+                        //     'token': '',
+                        // },
+                        params:params
+                    })
+                        .then(res=>{
+                            if (res.status == '200') {
+                                this.loading = false;
+                                this.$message.success('新增成功');
+                                this.$router.push({path: '/microWaterBody/microWaterNewList',query:{id:this.userId}})
+                            }else{
+                                this.$message.error('新增失败，请重试')
+                            }
+                        })
+                }else {
+                    this.$message.warn('请输入水系名称')
+                }
             },
             goBack() {
                 this.$router.go(-1);
             },
-            uploadImage({ fileList }) {
-                this.imageFileList = fileList;
-                console.log(fileList);
-                this.image = (fileList[0].response.results.relativePath).toString();
+            uploadImage({file, fileList}){//图片上传
+                this.imageFileList=fileList;
+                if (file.status === 'done') {
+                    this.$message.success('上传成功');
+                    this.imageFileList.forEach(item=>{
+                        if(item.uid===file.uid){
+                            item.responseUrl=file.response.results.realPath;
+                        }
+                    });
+                } else if (file.status === 'error') {
+                    this.$message.error('上传失败');
+                }
             },
-            uploadVideo({fileList}) {
-                this.videoFileList = fileList;
-                this.video = (fileList[0].response.results.relativePath).toString();
+            handlePreview(file) {
+                this.previewImage =BASE_URLimg + file.response.results.relativePath;
+                this.previewName = file.name;
+                this.previewVisible = true;
             },
+            uploadVideo({file, fileList}){//视屏上传
+                this.videoFileList=fileList;
+                if (file.status === 'done') {
+                    this.$message.success('上传成功');
+                    this.videoFileList.forEach(item=>{
+                        if(item.uid===file.uid){
+                            item.responseUrl=file.response.results.realPath;
+                        }
+                    });
+                } else if (file.status === 'error') {
+                    this.$message.error('上传失败');
+                }
+            },
+
         }
     }
 </script>
