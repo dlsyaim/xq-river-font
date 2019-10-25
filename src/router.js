@@ -13,6 +13,21 @@ export default new Router({
   mode:'history',
   routes: [
     {
+      path: '/microWaterBody/microWaterEdit',
+      name: 'microWaterEdit',
+      component: microWaterEdit
+    },
+    {
+      path: '/microWaterBody/microWaterNew',
+      name: 'microWaterNew',
+      component: microWaterNew
+    },
+    {
+      path: '/microWaterBody/microWaterNewList',
+      name: 'microWaterNewList',
+      component: microWaterNewList
+    },
+    {
       path: '/',
       name: 'A',
       component: Ahome
@@ -32,20 +47,6 @@ export default new Router({
       name: 'Editnews',
       component: Editnews
     },
-    {
-      path: '/microWaterBody/microWaterEdit',
-      name: 'microWaterEdit',
-      component: microWaterEdit
-    },
-    {
-      path: '/microWaterBody/microWaterNew',
-      name: 'microWaterNew',
-      component: microWaterNew
-    },
-    {
-      path: '/microWaterBody/microWaterNewList',
-      name: 'microWaterNewList',
-      component: microWaterNewList
-    },
+
   ]
 })

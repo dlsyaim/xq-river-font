@@ -1,13 +1,13 @@
 
 <template>
   <div>
-    <a-row style="text-align: center">
-      <a-col class="headStyle" :md="{ span: 24, offset: 0 }" :lg="{ span: 12, offset: 6 }">
-        <span @click="goBack" style="display: inline-block;position: absolute;left: 0;font-size: 18px"><a-icon type="left" /> 返回</span>
-        <span>我上报的微小水体</span>
-      </a-col>
-    </a-row>
-    <a-row>
+<!--    <a-row style="text-align: center">-->
+<!--      <a-col class="headStyle" :md="{ span: 24, offset: 0 }" :lg="{ span: 12, offset: 6 }">-->
+<!--        <span @click="goBack" style="display: inline-block;position: absolute;left: 0;font-size: 18px"><a-icon type="left" /> 返回</span>-->
+<!--        <span>我上报的微小水体</span>-->
+<!--      </a-col>-->
+<!--    </a-row>-->
+    <a-row style="margin-bottom: 25px">
       <a-col class="bodyStyle" :md="{ span: 24, offset: 0 }" :lg="{ span: 12, offset: 6 }">
         <div @click="handlerTableClick">
           <a-table
@@ -34,6 +34,7 @@
     </a-row>
     <a-modal
       title=""
+      :destroyOnClose="true"
       :closable="true"
       :visible="modalVisible"
       :footer="null"
@@ -49,14 +50,16 @@
       </div>
       <div style="padding-bottom: 10px">
         <span style="width: 25%;display: block;color: skyblue">水系照片：</span>
-        <img style="width: 100%;" :src="selected.imageList" alt="照片">
-<!--        <a-modal :visible="previewVisible" :footer="null" @cancel="previewVisible = false">-->
-<!--          <img alt="照片" style="width: 100%" src="selected.imageList" />-->
-<!--        </a-modal>-->
+        <img @click="showImage" v-for="(item, index) in imageCounter" style="width: 33%;height: 70px;border-radius: 10px;border: silver 3px solid" :key="index" :src="item" alt="照片">
+        <a-modal :visible="previewVisible" :footer="null" @cancel="previewVisible = false" style="text-align: center;">
+          <img alt="照片" style="width: 100%;margin: 25px 0 0 0;" :src="imageUrl" />
+          <div style="margin-top: 5px">水系名称：{{selected.riverName}}</div>
+          <div>水系描述：{{selected.riverText}}</div>
+        </a-modal>
       </div>
       <div style="padding-bottom: 10px">
         <span style="width: 25%;display: block;color: skyblue">水系视频：</span>
-        <video style="width: 100%" controls src="selected.videoList"></video>
+        <video v-if="this.selected.riverVideo" style="width: 100%" controls :src="videoUrl"></video>
       </div>
     </a-modal>
   </div>
@@ -64,7 +67,8 @@
 
 <script>
     import {post, get} from "../../util/axios";
-    import {BASE_URL} from "../../config/config";
+    import axios from "axios";
+    import {BASE_URL, BASE_URLimg} from "../../config/config";
 
     const columns = [
         {title:'水系名称', key: 'riverName', scopedSlots: { customRender: 'riverName' },align: 'center'},
@@ -78,9 +82,12 @@
                 columns,
                 data:[],
                 BASE_URL,
+                imageCounter: [],
                 loading:false,
                 modalVisible:false,
                 previewVisible:false,
+                imageUrl: "",
+                videoUrl: "",
                 list:[],
                 selected:{},
                 userId: '',
@@ -96,10 +103,17 @@
                     'userId':"ee67b73bf4bc11e9a71f0242ac110005",//this.userId,
                     'pageNo':1
                 };
-                post(`${BASE_URL}/v5/river/getIdRiverList`,params)
-                    .then(res=>{
-                        if (res.code === 200) {
-                            this.handleData(res.results.list);
+                axios({
+                    method: 'post',
+                    url: 'http://61.240.12.212:9088/v5/river/getIdRiverList',
+                    // headers: {
+                    //     'token': '',
+                    // },
+                    params:params
+                }).then(res=>{
+                        console.log(res)
+                        if (res.status == 200) {
+                            this.handleData(res.data.results.list);
                         }else {
                             this.$message.error('服务器出错')
                         }
@@ -116,14 +130,34 @@
                 this.data = list;
             },
             handlerTableClick(e) {//表格点击操作
+                this.imageCounter = [];
+                this.videoUrl =  "";
                 const id = e.target.dataset.id;
                 const method = e.target.dataset.method;
                 if (id && method) {
                     if (method === 'riverName') {//查看详情
                         //请求详情数据
-                        post(`http://61.240.12.212:9088/v5/river/findRiverById?riverId=${id}`).then(res=>{
-                            if (res.code == 200) {
-                                this.selected = res.results.river;
+                        const params = {'riverId': id};
+                        axios({
+                            method: 'post',
+                            url: 'http://61.240.12.212:9088/v5/river/findRiverById',
+                            // headers: {
+                            //     'token': '',
+                            // },
+                            params:params
+                        }).then(res=>{
+                            if (res.status == 200) {
+                                console.log(res);
+                                this.selected = res.data.results.river;
+                                // console.log(this.selected);
+                                if (this.selected.imageList) {
+                                    const allUrl = this.selected.imageList;
+                                    allUrl.forEach(item=>{
+                                        item = BASE_URLimg + item;
+                                        this.imageCounter.push(item)
+                                    })
+                                };
+                                this.videoUrl = BASE_URLimg + this.selected.riverVideo;
                             }
                         })
                         this.modalVisible = true;
@@ -137,6 +171,10 @@
             },
             goBack() {
                 this.$router.go(-1);
+            },
+            showImage(value) {
+                this.previewVisible = true;
+                this.imageUrl = value.target.currentSrc;
             },
         }
     }

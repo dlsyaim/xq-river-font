@@ -147,7 +147,7 @@
                     this.$message.success('上传成功');
                     this.imageFileList.forEach(item=>{
                         if(item.uid===file.uid){
-                            item.responseUrl=file.response.results.realPath;
+                            item.responseUrl=file.response.results.relativePath;
                         }
                     });
                 } else if (file.status === 'error') {
@@ -165,7 +165,7 @@
                     this.$message.success('上传成功');
                     this.videoFileList.forEach(item=>{
                         if(item.uid===file.uid){
-                            item.responseUrl=file.response.results.realPath;
+                            item.responseUrl=file.response.results.relativePath;
                         }
                     });
                 } else if (file.status === 'error') {
