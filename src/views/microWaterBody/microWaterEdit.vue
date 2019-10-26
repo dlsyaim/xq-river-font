@@ -85,6 +85,7 @@
         },
         mounted() {
             this.riverId = this.$route.query.riverId;
+            this.userId = this.$route.query.id;
             this.getEditDetail();
         },
         methods: {
@@ -116,7 +117,7 @@
                     const VideoUrl= this.videoFileList.filter(item=>item.responseUrl).map(item=>item.responseUrl);
                     const video=VideoUrl.join(',');
                     const params = {
-                        userId: '',
+                        userId: this.userId,
                         riverId: this.riverId,
                         riverName: this.list.riverName,
                         riverText: this.list.riverText,

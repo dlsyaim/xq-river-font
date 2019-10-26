@@ -95,9 +95,16 @@
         },
         mounted() {
             this.getList();
-            this.userId = this.$route.query.id;
+            this.getUserNameId();
         },
         methods: {
+            getUserNameId(){
+                // this.$message.warn(myId);
+                const myId = getUserId();
+                // const value = JSON.parse(myId);
+                this.$message.warn(myId);
+                this.userId = myId;
+            },
             getList() {
                 const params = {
                     'userId':"ee67b73bf4bc11e9a71f0242ac110005",//this.userId,
@@ -162,12 +169,12 @@
                         })
                         this.modalVisible = true;
                     }else if(method === 'action') {//编辑每条数据
-                        this.$router.push({path: '/microWaterBody/microWaterEdit',query:{riverId:id}});
+                        this.$router.push({path: '/microWaterBody/microWaterEdit',query:{'riverId':id,'userId':this.userId}});
                     }
                 }
             },
             report(){//上报后路由跳转至详情页
-                this.$router.push({path: '/microWaterBody/microWaterNew'});
+                this.$router.push({path: '/microWaterBody/microWaterNew',query:{'userId':this.userId}});
             },
             goBack() {
                 this.$router.go(-1);

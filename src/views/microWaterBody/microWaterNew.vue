@@ -12,6 +12,14 @@
           <span style="display: inline-block;width: 25%">水系名称：</span>
           <a-input style="width: 75%" v-model="riverName" placeholder="标题不超过20字"/>
         </div>
+        <div style="padding-bottom: 10px">
+          <span style="display: inline-block;width: 25%">水系经度：</span>
+          <a-input style="width: 75%" v-model="riverX"/>
+        </div>
+        <div style="padding-bottom: 10px">
+          <span style="display: inline-block;width: 25%">水系纬度：</span>
+          <a-input style="width: 75%" v-model="riverY"/>
+        </div>
         <div style="padding-bottom: 10px;vertical-align: top">
           <span style="display: inline-block;width: 25%;position: relative;bottom: 38px">水系描述：</span>
           <a-textarea rows="4"  style="width: 75%" v-model="riverText" placeholder="描述不超过100字" />
@@ -75,7 +83,8 @@
                 videoFileList: [],
                 riverX: '',
                 riverY: '',
-                userId: '0032f877687c45a0812f25af27e8092d',
+                // userId: '0032f877687c45a0812f25af27e8092d',
+                userId: '',
                 token:{
                     'token': localStorage.getItem('v5Token')
                 },
@@ -83,21 +92,35 @@
         },
         mounted() {
             this.city();
+            this.userId = this.$route.query.id;
+            this.$message.warn(this.userId);
+            alert('this.userId');
         },
         methods: {
             //获取用户位置
             city(){
-                const that =this;
-                const map = new BMap.Map("allmap");
-                const geolocation = new BMap.Geolocation();
-                geolocation.getCurrentPosition(function(r){
-                    if(this.getStatus() == BMAP_STATUS_SUCCESS){
-                        that.riverX = (r.longitude).toString();
-                        that.riverY = (r.latitude).toString();
-                    } else {
-                        alert('暂时无法获取你的位置')
-                    }
-                })
+                // const that =this;
+                // const map = new BMap.Map("allmap");
+                // const geolocation = new BMap.Geolocation();
+                // geolocation.getCurrentPosition(function(r){
+                //     if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                //         that.riverX = (r.longitude).toString();
+                //         that.riverY = (r.latitude).toString();
+                //     } else {
+                //         alert('暂时无法获取你的位置')
+                //     }
+                // });
+                const myGeolocation = HezzNativeHandler.getLocation();
+                const value = JSON.parse(myGeolocation);
+                // this.$message.warn(value);
+                this.riverX = value.longitude;
+                this.riverY = value.latitude;
+                // if(myGeolocation.Longitude && myGeolocation.Latitude){
+                //     that.riverX = myGeolocation.Longitude;
+                //     that.riverY = myGeolocation.Latitude;
+                // } else {
+                //     alert('暂时无法获取你的位置')
+                // }
             },
             saveMessage() {
                 if (this.riverName != '') {
@@ -116,7 +139,6 @@
                         riverX: this.riverX,//经度
                         riverY: this.riverY,//纬度
                     };
-                    console.log(this.riverX);
                     axios({
                         method: 'post',
                         url: 'http://61.240.12.212:9088/v5/river/insertRiver',
@@ -129,7 +151,7 @@
                             if (res.status == '200') {
                                 this.loading = false;
                                 this.$message.success('新增成功');
-                                this.$router.push({path: '/microWaterBody/microWaterNewList',query:{id:this.userId}})
+                                this.$router.push({path: '/microWaterBody/microWaterNewList'})
                             }else{
                                 this.$message.error('新增失败，请重试')
                             }
