@@ -99,11 +99,19 @@
         },
         methods: {
             getUserNameId(){
-                // this.$message.warn(myId);
-                const myId = getUserId();
-                // const value = JSON.parse(myId);
-                this.$message.warn(myId);
-                this.userId = myId;
+                var url = location.search; //获取url中"?"符后的字串
+                if (url.indexOf("?") != -1) {
+                    const str = url.split("userId=")[1];
+                    const strstr = str.split("&")[0];
+                    this.userId = strstr.join('');
+                    this.$message.warn('路由传参获取userId' + this.userId);
+                };
+                if (!this.userId) {
+                    const myId = getUserId();
+                    this.$message.warn('调用方法获取userId' + this.userId);
+                    this.userId = myId;
+                }
+
             },
             getList() {
                 const params = {

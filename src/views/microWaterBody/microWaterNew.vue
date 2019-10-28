@@ -112,9 +112,13 @@
                 // });
                 const myGeolocation = HezzNativeHandler.getLocation();
                 const value = JSON.parse(myGeolocation);
-                // this.$message.warn(value);
                 this.riverX = value.longitude;
                 this.riverY = value.latitude;
+                if(this.riverX && this.riverY){
+                    that.$message.success('经纬度获取成功');
+                } else {
+                    that.$message.warn('经纬度获取失败');
+                }
                 // if(myGeolocation.Longitude && myGeolocation.Latitude){
                 //     that.riverX = myGeolocation.Longitude;
                 //     that.riverY = myGeolocation.Latitude;
