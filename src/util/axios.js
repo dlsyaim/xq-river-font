@@ -1,8 +1,11 @@
 import axios from 'axios';
 import Vue from 'vue';
+import {getCookie} from "./util";
+
 axios.defaults.validateStatus = () => true;
 export const get = (url, params) => {
-  const accessToken = localStorage.getItem('v5Token');
+  // const accessToken = localStorage.getItem('v5Token');
+  const accessToken = getCookie('v5Token');
   return new Promise((resolve, reject) => {
     axios({
       method: 'get',
@@ -28,7 +31,8 @@ export const get = (url, params) => {
   });
 };
 export const post = (url,params, data) => {
-  const accessToken = localStorage.getItem('v5Token');
+  // const accessToken = localStorage.getItem('v5Token');
+  const accessToken = getCookie('v5Token');
   return new Promise((resolve, reject) => {
     axios({
       method: 'post',
@@ -57,7 +61,8 @@ export const post = (url,params, data) => {
 };
 
 export const put = (url, data) => {
-  const accessToken = localStorage.getItem('v5Token');
+  // const accessToken = localStorage.getItem('v5Token');
+  const accessToken = getCookie('v5Token');
   return new Promise((resolve, reject) => {
     axios({
       method: 'put',
@@ -84,7 +89,8 @@ export const put = (url, data) => {
 };
 
 export const deleteRequest = (url) => {
-  const accessToken = localStorage.getItem('v5Token');
+  // const accessToken = localStorage.getItem('v5Token');
+  const accessToken = getCookie('v5Token');
   return new Promise((resolve, reject) => {
     axios({
       method: 'delete',

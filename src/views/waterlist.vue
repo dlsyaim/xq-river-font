@@ -129,6 +129,8 @@
   import {getUrlKey} from "../config/config";
   import moment from 'moment';
   import {BASE_URLimg} from "../config/config";
+  import {getCookie,setCookie,delCookie} from "../util/util";
+
   const columns = [{
     title: '水系名称',
     dataIndex: 'riverName',
@@ -152,7 +154,7 @@
         confirmLoading: false,
         visible_ee: false,
         token:{
-          'token': localStorage.getItem('v5Token')
+          'token': getCookie('v5Token')
         },
         data_all: [],
         data_unread: [],
@@ -216,9 +218,9 @@
         this.data_all = [];
         this.data_read = [];
         this.data_unread = [];
-        post(`${BASE_URL}/v5/river/getRiverList`, null,).then(res => {
+        post(`${BASE_URL}/v5/river/getIdRiverList`, null,).then(res => {
           if (res.code === 200) {
-            let message = res.results.riverList;
+            let message = res.results.list;
             for (let j = 0; j < message.length; j++) {
               if (message[j].riverStatus == 1) {
                 message[j].realstatus = '已核实';
