@@ -4,11 +4,29 @@ import Ahome from '@/views/Index'
 import News from '@/views/news'
 import Waterlist from '@/views/waterlist'
 import Editnews from '@/views/editnews'
+import microWaterEdit from '@/views/microWaterBody/microWaterEdit.vue'
+import microWaterNew from '@/views/microWaterBody/microWaterNew.vue'
+import microWaterNewList from '@/views/microWaterBody/microWaterNewList.vue'
 Vue.use(Router);
 
 export default new Router({
   mode:'history',
   routes: [
+    {
+      path: '/microWaterBody/microWaterEdit',
+      name: 'microWaterEdit',
+      component: microWaterEdit
+    },
+    {
+      path: '/microWaterBody/microWaterNew',
+      name: 'microWaterNew',
+      component: microWaterNew
+    },
+    {
+      path: '/microWaterBody/microWaterNewList',
+      name: 'microWaterNewList',
+      component: microWaterNewList
+    },
     {
       path: '/',
       name: 'A',
@@ -29,5 +47,6 @@ export default new Router({
       name: 'Editnews',
       component: Editnews
     },
+
   ]
 })

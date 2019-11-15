@@ -85,7 +85,6 @@
   import {GetQueryString} from "../config/config";
   import {getUrlKey} from "../config/config";
   import moment from 'moment';
-  import {getCookie,setCookie,delCookie} from "../util/util";
 
   const columns = [{
     title: '水系名称',
@@ -469,15 +468,15 @@
         }
       },
       indexif() {
-        if (getCookie('v2Token')) {
+        if (localStorage.getItem('v2Token')) {
           const params = new URLSearchParams();
-          params.append('token', getCookie('v2Token'));
+          params.append('token', localStorage.getItem('v2Token'));
           params.append('info', 'v2');
           post(`${BASE_URL}/v1/auth/validToken`, null, params).then(res => {
             console.log(params);
             if (res.code === 200) {
             } else if (res.code === 411) {
-              delCookie('v2Token');
+              localStorage.clear();
               window.location.href = "http://61.240.12.212:9081?info=v2";
             }
           });
@@ -490,8 +489,7 @@
               console.log(params);
               if (res.code === 200) {
                 console.log(res);
-                let expireDays = 1000 * 60 * 60 * 24 ;
-                setCookie('v2Token', res.results.token,expireDays);
+                localStorage.setItem('v2Token', res.results.token);
               }
             });
           } else {
@@ -500,7 +498,7 @@
         }
       },
       logout() {
-        delCookie('v2Token');
+        localStorage.clear();
         window.location.href = "http://61.240.12.212:9081";
       },
       showModal() {
