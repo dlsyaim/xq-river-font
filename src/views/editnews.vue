@@ -80,7 +80,7 @@
 </template>
 <script>
   import {get, post} from "../util/axios";
-  import {BASE_URL} from "../config/config";
+  import {BASE_URL,BASE_9081} from "../config/config";
   import {BASE_URLimg} from "../config/config";
   import {GetQueryString} from "../config/config";
   import {getUrlKey} from "../config/config";
@@ -478,7 +478,7 @@
             if (res.code === 200) {
             } else if (res.code === 411) {
               localStorage.clear();
-              window.location.href = "http://61.240.12.212:9081?info=v2";
+              window.location.href = BASE_9081 + "?info=v2";
             }
           });
         } else {
@@ -492,13 +492,13 @@
               }
             });
           } else {
-            window.location.href = "http://61.240.12.212:9081?info=v2";
+            window.location.href = BASE_9081 + "?info=v2";
           }
         }
       },
       logout() {
         localStorage.clear();
-        window.location.href = "http://61.240.12.212:9081";
+        window.location.href = BASE_9081;
       },
       showModal() {
         this.visible = true

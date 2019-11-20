@@ -120,7 +120,7 @@
                 };
                 axios({
                     method: 'post',
-                    url: 'http://61.240.12.212:9088/v5/river/getIdRiverList',
+                    url: `${BASE_URL}/v5/river/getIdRiverList`,
                     // headers: {
                     //     'token': '',
                     // },
@@ -155,7 +155,7 @@
                         const params = {'riverId': id};
                         axios({
                             method: 'post',
-                            url: 'http://61.240.12.212:9088/v5/river/findRiverById',
+                            url: `${BASE_URL}/v5/river/findRiverById`,
                             // headers: {
                             //     'token': '',
                             // },

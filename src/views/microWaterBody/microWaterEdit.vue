@@ -22,10 +22,10 @@
           <a-upload
             style="display: inline-block"
             name="file"
-            @change="uploadImage"
+            @click="uploadImage"
             @preview="handlePreview"
             accept=".png,.jpg,.jpeg"
-            action="http://61.240.12.212:9088/v5/upload/upload"
+            :action="BASE_URL + '/v5/upload/upload'"
             listType="picture-card"
             :fileList="imageFileList"
           >
@@ -41,9 +41,9 @@
         <div style="padding-bottom: 10px">
           <span style="display: inline-block;width: 25%">水系视频：</span>
           <a-upload
-            @change="uploadVideo"
+            @click="uploadVideo"
             name="file"
-            action="http://61.240.12.212:9088/v5/upload/upload"
+            :action="BASE_URL + '/v5/upload/upload'"
             :fileList="videoFileList"
           >
             <a-button style="background-color:skyblue;color: whitesmoke" icon="upload">视频上传</a-button>
@@ -66,6 +66,7 @@
         name: "microWaterEdit",
         data() {
             return {
+                BASE_URL,
                 BASE_URLimg,
                 riverName: '',
                 riverRemark: '',
@@ -95,7 +96,7 @@
                 };
                 axios({
                     method: 'post',
-                    url: 'http://61.240.12.212:9088/v5/river/findRiverById',
+                    url: `${BASE_URL}/v5/river/findRiverById`,
                     // headers: {
                     //     'token': '',
                     // },
@@ -128,7 +129,7 @@
                     };
                     axios({
                         method: 'post',
-                        url: 'http://61.240.12.212:9088/v5/river/updateRiver',
+                        url: `${BASE_URL}/v5/river/updateRiver`,
                         // headers: {
                         //     'token': '',
                         // },

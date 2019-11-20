@@ -2,15 +2,35 @@
  * api根路径
  * @type {string}http://10.0.0.96:7244
  */
+
+const BASE = (function () {//获取用户URL信息（自调用函数）
+  // console.log(window.location.href,'函数内部打印，测试文件优先级，即执行顺序');
+  const userImportURL = window.location.href;
+  if (userImportURL.indexOf('192.168.2.109') != -1) {
+    return '//192.168.2.109';
+  }else {
+    return '//61.240.12.212';
+  }
+})();
+
+
 // export const BASE_URL='http://61.240.12.212:9081';
-export const BASE_URL='http://61.240.12.212:9088';
-export const BASE_URLimg='http://61.240.12.212:9095/';
-export const BASE_URLa='http://61.240.12.212:9088';
-export const BASE_URLc='http://61.240.12.212:9081';
+export const BASE_URL='http:'+BASE+':9088';
+export const BASE_URLimg='http:'+BASE+':9095/';
+export const BASE_URLa='http:'+BASE+':9088';
+export const BASE_URLc='http:'+BASE+':9081';
 /**
  * 上传文件接口
  * @type {string}
  */
+
+/**
+ * 基础URL地址
+ * @type {string}
+ */
+export const BASE_9081='http:'+BASE+':9081';
+
+
 export const UPLOAD_URL='http://60.28.163.75/inform/v1/informReport/upload';
 export const FILE_URL_PREFIX='http://47.93.191.69:8080';
 /**

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import Vue from 'vue';
+import {BASE_9081} from "../config/config";
+
 axios.defaults.validateStatus = () => true;
 export const get = (url, params) => {
   const accessToken = localStorage.getItem('v5Token');
@@ -16,7 +18,7 @@ export const get = (url, params) => {
         resolve(res.data);
       } else if(res.status === 403) {
         localStorage.clear();
-        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+        window.location.href=BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
       } else {
         handleHttpError(err);
         resolve(err.data)
@@ -44,7 +46,7 @@ export const post = (url,params, data) => {
         resolve(res.data);
       } else if(res.status === 403) {
         localStorage.clear();
-        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+        window.location.href=BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
       } else {
         handleHttpError(err);
         resolve(err.data)
@@ -71,7 +73,7 @@ export const put = (url, data) => {
         resolve(res.data);
       } else if(res.status === 403) {
         localStorage.clear();
-        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+        window.location.href=BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
       } else {
         handleHttpError(err);
         resolve(err.data)
@@ -97,7 +99,7 @@ export const deleteRequest = (url) => {
         resolve(res.data);
       } else if(res.status === 403) {
         localStorage.clear();
-        window.location.href="http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+        window.location.href=BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
       } else {
         handleHttpError(err);
         resolve(err.data)

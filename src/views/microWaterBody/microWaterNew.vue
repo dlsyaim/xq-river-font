@@ -29,10 +29,10 @@
           <a-upload
             name="file"
             style="display: inline-block"
-            @change="uploadImage"
+            v-on:click="uploadImage"
             @preview="handlePreview"
             accept=".png,.jpg,.jpeg"
-            action="http://61.240.12.212:9088/v5/upload/upload"
+            :action="BASE_URL + '/v5/upload/upload'"
             listType="picture-card"
             :fileList="imageFileList"
           >
@@ -48,8 +48,8 @@
         <div style="padding-bottom: 10px">
           <span style="display: inline-block;width: 25%">水系视频：</span>
           <a-upload
-            action="http://61.240.12.212:9088/v5/upload/upload"
-            @change="uploadVideo"
+            :action="BASE_URL + '/v5/upload/upload'"
+            @click="uploadVideo"
             name="file"
             :fileList="videoFileList"
           >
@@ -74,6 +74,7 @@
         data() {
             return {
                 riverName: '',
+                BASE_URL,
                 BASE_URLimg,
                 riverText: '',
                 imageFileList: [],
@@ -145,7 +146,7 @@
                     };
                     axios({
                         method: 'post',
-                        url: 'http://61.240.12.212:9088/v5/river/insertRiver',
+                        url: `${BASE_URL}/v5/river/insertRiver`,
                         // headers: {
                         //     'token': '',
                         // },

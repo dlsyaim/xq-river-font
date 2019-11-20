@@ -48,7 +48,7 @@
 </template>
 <script>
   import {get, post} from "../util/axios";
-  import {BASE_URL} from "../config/config";
+  import {BASE_URL,BASE_9081} from "../config/config";
   import {BASE_URLimg} from "../config/config";
   import {BASE_URLc} from "../config/config";
   import {GetQueryString} from "../config/config";
@@ -396,7 +396,7 @@
             } else if (res.code === 411) {
               console.log('token 失效');
               localStorage.clear();
-              window.location.href = "http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+              window.location.href = BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
             }
           });
         }
@@ -416,13 +416,13 @@
               }
             });
           } else {
-            window.location.href = "http://61.240.12.212:9081?info=v5&from=" + window.location.origin + window.location.pathname;
+            window.location.href = BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
           }
         }
       },
       logout() {
         localStorage.clear();
-        window.location.href = "http://61.240.12.212:9081";
+        window.location.href =BASE_9081;
       },
       showModal() {
         this.visible = true
