@@ -54,6 +54,8 @@
   import {GetQueryString} from "../config/config";
   import {getUrlKey} from "../config/config";
   import moment from 'moment';
+  import {getCookie,setCookie,delCookie} from "../util/util";
+
   export default {
     data() {
       return {
@@ -385,9 +387,9 @@
         });
       },
       indexif() {
-        if (localStorage.getItem('v5Token')) {
+        if (getCookie('v5Token')) {
           const params = new URLSearchParams();
-          params.append('token', localStorage.getItem('v5Token'));
+          params.append('token', getCookie('v5Token'));
           params.append('info', 'v5');
           post(`${BASE_URLc}/v1/auth/validToken`, null, params).then(res => {
             console.log(params);
@@ -395,7 +397,9 @@
               this.index_c();
             } else if (res.code === 411) {
               console.log('token 失效');
-              localStorage.clear();
+              // localStorage.clear();
+              // window.location.href = BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
+              delCookie('v5Token');
               window.location.href = BASE_9081 + "?info=v5&from=" + window.location.origin + window.location.pathname;
             }
           });
@@ -409,8 +413,9 @@
               console.log(params);
               if (res.code === 200) {
                 console.log(res);
-                localStorage.setItem('v5Token', res.results.token);
-                if(localStorage.getItem('v5Token')){
+                let expireDays = 1000 * 60 * 60 * 24 ;
+                setCookie('v5Token', res.results.token,expireDays);
+                if(getCookie('v5Token')){
                   this.index_c();
                 }
               }
@@ -421,8 +426,10 @@
         }
       },
       logout() {
-        localStorage.clear();
-        window.location.href =BASE_9081;
+        // localStorage.clear();
+        // window.location.href =BASE_9081;
+        delCookie('v5Token');
+        window.location.href = BASE_9081;
       },
       showModal() {
         this.visible = true

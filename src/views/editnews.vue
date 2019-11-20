@@ -85,6 +85,7 @@
   import {GetQueryString} from "../config/config";
   import {getUrlKey} from "../config/config";
   import moment from 'moment';
+  import {getCookie,setCookie,delCookie} from "../util/util";
 
   const columns = [{
     title: '水系名称',
@@ -205,9 +206,9 @@
             this.riverLong = res.results.river.riverLong;
             this.riverText = res.results.river.riverText;
             this.riverVideo = BASE_URL + res.results.river.riverVideo;
-              console.log(this.riverVideo);
-              if(res.results.river.imageList.length>0 && res.results.river.imageList.length<=9){
+            if(res.results.river.imageList.length>0 && res.results.river.imageList.length<=9){
               for(let i=0;i<res.results.river.imageList.length;i++){
+                // console.log(res.results.river.imageList[i]);
                 this.riverImage[i]=BASE_URLimg+res.results.river.imageList[i];
               }
 
@@ -232,6 +233,7 @@
         const params = new URLSearchParams();
         params.append('x', this.map_x[0]);
         params.append('y', this.map_y[0]);
+        console.log(params);
         post(BASE_URL + '/v5/river/getRiverByXY', null, params).then(res => {
           if (res.code === 200) {
             if (res.results.river.riverStatus == 1) {
@@ -241,9 +243,8 @@
             }
             this.riverLong = res.results.river.riverLong;
             this.riverText = res.results.river.riverText;
-            this.riverVideo = BASE_URL +  res.results.river.riverVideo;
-              console.log(this.riverVideo);
-              this.riverImage = res.results.river.riverImage;
+            this.riverVideo = BASE_URL + res.results.river.riverVideo;
+            this.riverImage = res.results.river.riverImage;
             this.riverX = res.results.river.riverX;
             this.riverY = res.results.river.riverY;
             this.riverOneToOne = res.results.river.riverOneToOne;
@@ -420,21 +421,21 @@
         if (id && statu == 'det') {
           const params = new URLSearchParams();
           params.append('riverId', id);
-
+          console.log(id);
           post(BASE_URL + '/v5/river/findRiverById', null, params).then(res => {
-
+            console.log(res);
             if (res.code === 200) {
               this.showModal_det();
               this.riverStatus = res.results.river.riverStatus;
               this.riverLong = res.results.river.riverLong;
               this.riverText = res.results.river.riverText;
-              this.riverVideo = BASE_URLimg + res.results.river.riverVideo;
-                console.log(this.riverVideo);
-                if(res.results.river.imageList.length>0 && res.results.river.imageList.length<=9){
+              this.riverVideo = BASE_URL + res.results.river.riverVideo;
+              if(res.results.river.imageList.length>0 && res.results.river.imageList.length<=9){
                 for(let i=0;i<res.results.river.imageList.length;i++){
+                  // console.log(res.results.river.imageList[i]);
                   this.riverImage[i]=BASE_URLimg+res.results.river.imageList[i];
                 }
-                    console.log(this.riverImage);
+
               }
               else if(res.results.river.imageList.length>9){
                 for(let i=res.results.river.imageList.length;i>res.results.river.imageList.length-9;i--){
@@ -460,7 +461,7 @@
             if (res.code === 200) {
               this.riverX=res.results.river.riverX;
               this.riverY=res.results.river.riverY;
-
+              console.log(res);
               this.mapList = res.results.river.mapList[0];
               this.map_move(this.riverX, this.riverY);
             }
@@ -468,16 +469,17 @@
         }
       },
       indexif() {
-        if (localStorage.getItem('v2Token')) {
+        if (getCookie('v2Token')) {
           const params = new URLSearchParams();
-          params.append('token', localStorage.getItem('v2Token'));
+          params.append('token', getCookie('v2Token'));
           params.append('info', 'v2');
           post(`${BASE_URL}/v1/auth/validToken`, null, params).then(res => {
-
-
+            console.log(params);
             if (res.code === 200) {
             } else if (res.code === 411) {
-              localStorage.clear();
+              // localStorage.clear();
+              //   window.location.href = BASE_9081 + "?info=v2";
+              delCookie('v2Token');
               window.location.href = BASE_9081 + "?info=v2";
             }
           });
@@ -487,8 +489,11 @@
             params.append('st', getUrlKey('ST'));
             params.append('info', 'v2');
             post(`${BASE_URL}/v1/auth/validSt`, null, params).then(res => {
+              console.log(params);
               if (res.code === 200) {
-                localStorage.setItem('v2Token', res.results.token);
+                console.log(res);
+                let expireDays = 1000 * 60 * 60 * 24 ;
+                setCookie('v2Token', res.results.token,expireDays);
               }
             });
           } else {
@@ -497,7 +502,9 @@
         }
       },
       logout() {
-        localStorage.clear();
+        // localStorage.clear();
+        // window.location.href = BASE_9081;
+        delCookie('v2Token');
         window.location.href = BASE_9081;
       },
       showModal() {
@@ -512,9 +519,11 @@
         }, 2000);
       },
       handleCancel(e) {
+        console.log('Clicked cancel button');
         this.visible = false
       },
       slider_active(e) {
+        console.log(e);
         switch (e) {
           case 'f57a0d43b59611e99ca320898447c563':
             this.title_left = "新闻动态列表";
@@ -575,6 +584,7 @@
           const river_map = [];
           river_map['lat'];
           river_map['lng'];
+          console.log(river_map);
           for (let i = 0; i < ccc[1].jt.CO.ht.length; i++) {
             river_map[i] = [ccc[1].jt.CO.ht[i].lat, ccc[1].jt.CO.ht[i].lng];
           }
@@ -584,6 +594,7 @@
           this.$message.error(`请先绘制河流轨迹`, 2);
         }
         return this.riverMap;
+        // console.log(river_map);
       },
       saveriver() {
         let ccc = this.map.getOverlays();
@@ -591,6 +602,7 @@
           const river_map = [];
           river_map['lat'];
           river_map['lng'];
+          console.log(river_map);
           for (let i = 0; i < ccc[1].jt.CO.ht.length; i++) {
             river_map[i] = [ccc[1].jt.CO.ht[i].lat, ccc[1].jt.CO.ht[i].lng];
           }
@@ -599,6 +611,7 @@
           params.append('riverId', this.riverId);
           params.append('riverMap', this.riverMap);
           post(BASE_URL + '/v5/river/insertMapById', null, params).then(res => {
+            console.log(res);
             if (res.code === 200) {
               this.$message.success(`成功`, 2);
             } else {
